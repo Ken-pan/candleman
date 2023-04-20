@@ -9,7 +9,7 @@
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-replace": "^5.0.2",
     "@types/node": "^18.15.11",
-    "phaser": "^3.55.2",
+    "phaser": "^3.60.0",
     "typescript": "^5.0.3",
     "vite": "^4.2.1"
   }
