@@ -2,15 +2,16 @@
   "name": "my-first-game",
   "scripts": {
     "start": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "update-packages": "npx npm-check-updates -u && npm install"
   },
   "devDependencies": {
-    "@rollup/plugin-alias": "^4.0.3",
-    "@rollup/plugin-commonjs": "^24.0.1",
+    "@rollup/plugin-alias": "^5.0.0",
+    "@rollup/plugin-commonjs": "^24.1.0",
     "@rollup/plugin-replace": "^5.0.2",
-    "@types/node": "^18.15.11",
+    "@types/node": "^18.15.12",
     "phaser": "^3.60.0",
-    "typescript": "^5.0.3",
-    "vite": "^4.2.1"
+    "typescript": "^5.0.4",
+    "vite": "^4.3.1"
   }
 }
