@@ -8,6 +8,12 @@ export default class MainScene extends Phaser.Scene {
   scoreText = `Score: ${this.score}`
   scoreUI!: Phaser.GameObjects.Text
 
+  // Layers
+  groundLayer!: Phaser.Tilemaps.TilemapLayer | null
+  waxLayer!: Phaser.Tilemaps.TilemapLayer | null
+  doorsLayer!: Phaser.Tilemaps.TilemapLayer | null
+  treesLayer!: Phaser.Tilemaps.TilemapLayer | null
+
   constructor() {
     super({
       key: 'MainScene',
@@ -19,18 +25,26 @@ export default class MainScene extends Phaser.Scene {
 
   create() {
     const map = this.make.tilemap({ key: 'map' })
-    console.log('map', map)
 
-    // const tileset2 = map.addTilesetImage('dungeon', 'tiles', 16, 16, 1, 2)
     const tileset = map.addTilesetImage('tileset', 'tileset', 32, 32, 0, 0)
-
-    console.log(tileset)
 
     if (tileset === null) {
       throw new Error('tileset is null')
     }
 
-    map.createLayer('Ground', tileset)
-    map.createLayer('Walls', tileset)
+    // Note: order matters (reverse of what you see in Tiled)
+    this.groundLayer = map.createLayer('Ground', tileset)
+    this.waxLayer = map.createLayer('Wax', tileset)
+    this.doorsLayer = map.createLayer('Doors', tileset)
+    this.treesLayer = map.createLayer('Trees', tileset)
+
+    if (this.groundLayer === null) {
+      throw new Error('Ground Layer is null.')
+    }
+
+    this.groundLayer.setCollisionByProperty({ collides: true })
+
+    // Collisions
+    // this.physics.add.collider(this.candleman, this.groundLayer)
   }
 }
