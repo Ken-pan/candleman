@@ -6,8 +6,8 @@ const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   scale: {
     mode: Phaser.Scale.FIT,
-    width: 800,
-    height: 500,
+    width: 400,
+    height: 800,
   },
   physics: {
     default: 'arcade',
@@ -17,6 +17,7 @@ const config: Phaser.Types.Core.GameConfig = {
     },
   },
   scene: [PreloaderScene, MainScene],
+  roundPixels: true, // <-- 设置roundPixels为true
 }
 
 const game = new Phaser.Game(config)
