@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import PreloaderScene from './scenes/PreloaderScene'
 import MainScene from './scenes/MainScene'
+import UIScene from './scenes/UIScene'
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -16,7 +17,7 @@ const config: Phaser.Types.Core.GameConfig = {
       // debug: true,
     },
   },
-  scene: [PreloaderScene, MainScene],
+  scene: [PreloaderScene, MainScene, UIScene],
   roundPixels: true, // <-- 设置roundPixels为true
 }
 

@@ -1,6 +1,6 @@
 import Candleman from '../objects/Candleman'
 let waxIsRunning = true
-let waxRate = 1/60
+let waxRate = 1 / 600
 
 export default class MainScene extends Phaser.Scene {
   plateforms!: Phaser.Physics.Arcade.StaticGroup
@@ -22,9 +22,7 @@ export default class MainScene extends Phaser.Scene {
   candleman!: Candleman
 
   constructor() {
-    super({
-      key: 'MainScene',
-    })
+    super({ key: 'MainScene' })
     console.log("I'm inside my MainScene")
   }
 
@@ -88,7 +86,6 @@ export default class MainScene extends Phaser.Scene {
     this.mainCamera.setFollowOffset(0, 0)
     this.mainCamera.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
 
-
     // mask
     this.mask = this.add.graphics()
     this.mask.fillStyle(0x000000, 1)
@@ -98,44 +95,43 @@ export default class MainScene extends Phaser.Scene {
     this.mask.setAlpha(0.2)
     this.mask.setBlendMode(Phaser.BlendModes.MULTIPLY)
 
-    // UI
-    const uiContainer = this.add.container(0, 0)
-    uiContainer.setScrollFactor(1)
+    // // UI
+    // const uiContainer = this.add.container(0, 0)
+    // uiContainer.setScrollFactor(1)
 
-    // Wax bar
-    this.waxBar = this.add.graphics()
-    this.waxBar.fillStyle(0xff0000, 1)
-    this.waxBar.fillRect(10, 10, 200, 20)
-    this.waxBar.setScrollFactor(0)
-    this.waxBar.setDepth(100)
-    uiContainer.add(this.waxBar)
+    // // Wax bar
+    // this.waxBar = this.add.graphics()
+    // this.waxBar.fillStyle(0xff0000, 1)
+    // this.waxBar.fillRect(10, 10, 200, 20)
+    // this.waxBar.setScrollFactor(0)
+    // this.waxBar.setDepth(100)
+    // uiContainer.add(this.waxBar)
 
-    // Wax bar background
-    this.waxBarBackground = this.add.graphics()
-    this.waxBarBackground.fillStyle(0x000000, 0.5)
-    this.waxBarBackground.fillRect(10, 10, 200, 20)
-    this.waxBarBackground.setScrollFactor(0)
-    this.waxBarBackground.setDepth(99)
-    uiContainer.add(this.waxBarBackground)
+    // // Wax bar background
+    // this.waxBarBackground = this.add.graphics()
+    // this.waxBarBackground.fillStyle(0x000000, 0.5)
+    // this.waxBarBackground.fillRect(10, 10, 200, 20)
+    // this.waxBarBackground.setScrollFactor(0)
+    // this.waxBarBackground.setDepth(99)
+    // uiContainer.add(this.waxBarBackground)
 
-    //UI
-    this.scoreUI = this.add.text(16, 13, `WAX: ${this.wax}`, {
-      fontSize: '16px',
-      color: '#fff',
-    })
-    this.scoreUI.setDepth(100)
-    this.scoreUI.setScrollFactor(0)
-    uiContainer.add(this.scoreUI)
+    // //UI
+    // this.scoreUI = this.add.text(16, 13, `WAX: ${this.wax}`, {
+    //   fontSize: '16px',
+    //   color: '#fff',
+    // })
+    // this.scoreUI.setDepth(100)
+    // this.scoreUI.setScrollFactor(0)
+    // uiContainer.add(this.scoreUI)
 
-    // Position the container
-    uiContainer.setPosition(0, 0)
+    // // Position the container
+    // uiContainer.setPosition(0, 0)
   }
   update() {
     this.candleman.update()
     const mainCamera = this.cameras.main
 
     // create dark mask
-
 
     // this.mask.clear()
     // this.mask = this.add.graphics()
@@ -145,36 +141,35 @@ export default class MainScene extends Phaser.Scene {
     this.mask.setDepth(1)
     this.mask.x = this.candleman.x - mainCamera.scrollX
     this.mask.y = this.candleman.y - mainCamera.scrollY
-    console.log(`mask's position: x:${ this.mask.x }, y:${ this.mask.y }}`)
+    console.log(`mask's position: x:${this.mask.x}, y:${this.mask.y}}`)
 
-    this.waxBar.clear()
-    this.waxBar.fillStyle(0xff0000, 1)
-    this.waxBar.fillRect(0, 0, this.wax * 2, 20)
-    this.waxBar.setScrollFactor(0)
-    this.waxBar.setDepth(100)
-    this.waxBar.x = 10
-    this.waxBar.y = 10
+    // this.waxBar.clear()
+    // this.waxBar.fillStyle(0xff0000, 1)
+    // this.waxBar.fillRect(0, 0, this.wax * 2, 20)
+    // this.waxBar.setScrollFactor(0)
+    // this.waxBar.setDepth(100)
+    // this.waxBar.x = 10
+    // this.waxBar.y = 10
 
-    // Wax timer
-    this.time.addEvent({
-      delay: 100, // 1 second
-      callback: () => {
-        if (!waxIsRunning) return
-        this.wax -= 1 * waxRate
-        if (this.wax <= 0) {
-          // Game over
-          alert('Game over')
-          waxIsRunning = false
-        } else {
-          this.waxBar.clear()
-          this.waxBar.fillStyle(0xff0000, 1)
-          this.waxBar.fillRect(10, 10, this.wax * 2, 20)
-          this.scoreUI.setText(`WAX: ${Math.floor(this.wax)}`)
-
-        }
-      },
-      loop: false,
-    })
+    // // Wax timer
+    // this.time.addEvent({
+    //   delay: 100, // 1 second
+    //   callback: () => {
+    //     if (!waxIsRunning) return
+    //     this.wax -= 1 * waxRate
+    //     if (this.wax <= 0) {
+    //       // Game over
+    //       alert('Game over')
+    //       waxIsRunning = false
+    //     } else {
+    //       this.waxBar.clear()
+    //       this.waxBar.fillStyle(0xff0000, 1)
+    //       this.waxBar.fillRect(10, 10, this.wax * 2, 20)
+    //       this.scoreUI.setText(`WAX: ${Math.floor(this.wax)}`)
+    //     }
+    //   },
+    //   loop: false,
+    // })
 
     //if user click the space, the candleman will light up
     // throw an error if this.input.keyboard is null

@@ -1,5 +1,3 @@
-import Phaser from 'phaser'
-
 export default class PreloaderScene extends Phaser.Scene {
   plateforms!: Phaser.Physics.Arcade.StaticGroup
   player!: Phaser.Physics.Arcade.Sprite
@@ -7,9 +5,7 @@ export default class PreloaderScene extends Phaser.Scene {
   ghost!: Phaser.Physics.Arcade.Group
 
   constructor() {
-    super({
-      key: 'PreloaderScene',
-    })
+    super({ key: 'PreloaderScene' })
     console.log("I'm inside my PreloaderScene")
   }
 
@@ -24,6 +20,7 @@ export default class PreloaderScene extends Phaser.Scene {
 
   create() {
     this.scene.start('MainScene')
+    this.scene.start('UIScene')
   }
 
   update() {}
