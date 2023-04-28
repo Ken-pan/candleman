@@ -1,7 +1,7 @@
 export default class UIScene extends Phaser.Scene {
   wax = 100
   waxIsRunning = true
-  waxRate = 10
+  waxRate = 1000 // 1 second
 
   waxBar!: Phaser.GameObjects.Graphics
   waxBarBackground!: Phaser.GameObjects.Graphics

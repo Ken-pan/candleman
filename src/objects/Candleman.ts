@@ -6,7 +6,7 @@ export default class Candleman extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this)
     this.setCollideWorldBounds(true)
     this.makeAnimations()
-    this.update()
+    // this.update()
 
     this.anims.play('candleman-idle', true)
   }
@@ -62,10 +62,14 @@ export default class Candleman extends Phaser.Physics.Arcade.Sprite {
   preUpdate(t: number, dt: number) {
     super.preUpdate(t, dt)
 
+    console.clear()
+    console.log(`candleman x:${this.x}, y:${this.y}}`)
+
     this.setVelocity(0)
     if (this.scene.input.keyboard === null) {
       throw new Error('Trees Layer is null.')
     }
+
     if (this.scene.input.keyboard.addKey('left').isDown) {
       this.setVelocityX(-80)
       this.anims.play('candleman-left', true)

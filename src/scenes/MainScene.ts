@@ -100,10 +100,10 @@ export default class MainScene extends Phaser.Scene {
     // this.mask.fillStyle(0xff0000, 1)
     // this.mask.visible = false
     // this.cameras.main.setMask(new Phaser.Display.Masks.GeometryMask(this, this.mask))
+
     this.mask.setDepth(1)
-    this.mask.x = this.candleman.x - this.cameras.main.scrollX
-    this.mask.y = this.candleman.y - this.cameras.main.scrollY
-    console.log(`mask's position: x:${this.mask.x}, y:${this.mask.y}}`)
+    this.mask.x = this.candleman.x
+    this.mask.y = this.candleman.y
 
     //if user click the space, the candleman will light up
     // throw an error if this.input.keyboard is null
