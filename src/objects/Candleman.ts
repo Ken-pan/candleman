@@ -62,9 +62,6 @@ export default class Candleman extends Phaser.Physics.Arcade.Sprite {
   preUpdate(t: number, dt: number) {
     super.preUpdate(t, dt)
 
-    console.clear()
-    console.log(`candleman x:${this.x}, y:${this.y}}`)
-
     this.setVelocity(0)
     if (this.scene.input.keyboard === null) {
       throw new Error('Trees Layer is null.')
