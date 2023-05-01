@@ -16,6 +16,10 @@ export default class PreloaderScene extends Phaser.Scene {
       frameWidth: 24,
       frameHeight: 36,
     })
+    this.load.spritesheet('tile', 'assets/tilemaps/tileset.png', {
+      frameWidth: 32,
+      frameHeight: 32,
+    })
   }
 
   create() {

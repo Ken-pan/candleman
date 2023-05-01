@@ -7,6 +7,7 @@ export default class UIScene extends Phaser.Scene {
   waxBarBackground!: Phaser.GameObjects.Graphics
   scoreUI!: Phaser.GameObjects.Text
   uiContainer!: Phaser.GameObjects.Container
+  mainScene!: any
 
   constructor() {
     super({ key: 'UIScene' })
@@ -15,8 +16,8 @@ export default class UIScene extends Phaser.Scene {
 
   create() {
     this.createContainer()
-    this.createWaxBar()
     this.createWaxBarBackground()
+    this.createWaxBar()
     this.createScoreUI()
     this.createTimers()
   }
@@ -44,7 +45,7 @@ export default class UIScene extends Phaser.Scene {
   private createWaxBar() {
     this.waxBar = this.add.graphics()
     this.waxBar.fillStyle(0xff0000, 1)
-    this.waxBar.fillRect(10, 10, 200, 20)
+    this.waxBar.fillRect(10, 10, 300, 20)
     this.waxBar.setScrollFactor(0)
     this.waxBar.setDepth(100)
     this.uiContainer.add(this.waxBar)
@@ -54,7 +55,7 @@ export default class UIScene extends Phaser.Scene {
   private createWaxBarBackground() {
     this.waxBarBackground = this.add.graphics()
     this.waxBarBackground.fillStyle(0x000000, 0.5)
-    this.waxBarBackground.fillRect(10, 10, 200, 20)
+    this.waxBarBackground.fillRect(10, 10, 300, 20)
     this.waxBarBackground.setScrollFactor(0)
     this.waxBarBackground.setDepth(99)
     this.uiContainer.add(this.waxBarBackground)
@@ -91,9 +92,12 @@ export default class UIScene extends Phaser.Scene {
       // TODO: Add game over scene
       // this.scene.start('GameOverScene')
     } else {
+      if (this.wax > 100) {
+        this.wax = 100
+      }
       this.waxBar.clear()
       this.waxBar.fillStyle(0xff0000, 1)
-      this.waxBar.fillRect(10, 10, this.wax * 2, 20)
+      this.waxBar.fillRect(10, 10, this.wax * 3, 20)
       this.scoreUI.setText(`WAX: ${Math.floor(this.wax)}`)
     }
   }

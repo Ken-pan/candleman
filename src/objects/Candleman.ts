@@ -70,6 +70,7 @@ export default class Candleman extends Phaser.Physics.Arcade.Sprite {
     if (this.scene.input.keyboard.addKey('left').isDown) {
       this.setVelocityX(-80)
       this.anims.play('candleman-left', true)
+
       console.log('turn left')
     } else if (this.scene.input.keyboard.addKey('right').isDown) {
       this.setVelocityX(80)
@@ -86,5 +87,6 @@ export default class Candleman extends Phaser.Physics.Arcade.Sprite {
     } else {
       this.anims.play('candleman-idle', true)
     }
+
   }
 }
