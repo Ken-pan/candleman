@@ -1,10 +1,12 @@
 import Candleman from '../objects/Candleman'
 
+
 export default class MainScene extends Phaser.Scene {
   plateforms!: Phaser.Physics.Arcade.StaticGroup
   player!: Phaser.Physics.Arcade.Sprite
   cursors!: Phaser.Types.Input.Keyboard.CursorKeys
-  ghost!: Phaser.Physics.Arcade.Group
+  ghosts!: Phaser.Physics.Arcade.Group
+  ghost!: Phaser.Physics.Arcade.Sprite
   mainCamera!: Phaser.Cameras.Scene2D.Camera
   mask!: Phaser.GameObjects.Graphics
   uiScene!: any
@@ -59,32 +61,32 @@ export default class MainScene extends Phaser.Scene {
     // this.groundLayer.setCollisionByProperty({ collides: true })
     this.waxLayer.setCollisionByProperty({ collides: true })
     this.doorsLayer.setCollisionByProperty({ collides: true })
-    // this.treesLayer.setCollisionByProperty({ collides: true })
+    this.treesLayer.setCollisionByProperty({ collides: true })
 
     const debugGraphics = this.add.graphics().setAlpha(0.75)
 
-    this.groundLayer.renderDebug(debugGraphics, {
-      tileColor: null,
-      collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
-      faceColor: new Phaser.Display.Color(40, 39, 37, 255),
-    })
-    this.waxLayer.renderDebug(debugGraphics, {
-      tileColor: null,
-      collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
-      faceColor: new Phaser.Display.Color(40, 39, 37, 255),
-    })
-    this.doorsLayer.renderDebug(debugGraphics, {
-      tileColor: null,
-      collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
-      faceColor: new Phaser.Display.Color(40, 39, 37, 255),
-    })
-    this.treesLayer.renderDebug(debugGraphics, {
-      tileColor: null,
-      collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
-      faceColor: new Phaser.Display.Color(40, 39, 37, 255),
-    })
+    // this.groundLayer.renderDebug(debugGraphics, {
+    //   tileColor: null,
+    //   collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
+    //   faceColor: new Phaser.Display.Color(40, 39, 37, 255),
+    // })
+    // this.waxLayer.renderDebug(debugGraphics, {
+    //   tileColor: null,
+    //   collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
+    //   faceColor: new Phaser.Display.Color(40, 39, 37, 255),
+    // })
+    // this.doorsLayer.renderDebug(debugGraphics, {
+    //   tileColor: null,
+    //   collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
+    //   faceColor: new Phaser.Display.Color(40, 39, 37, 255),
+    // })
+    // this.treesLayer.renderDebug(debugGraphics, {
+    //   tileColor: null,
+    //   collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
+    //   faceColor: new Phaser.Display.Color(40, 39, 37, 255),
+    // })
 
-    this.candleman = new Candleman(this, 100, 100)
+    this.candleman = new Candleman(this, 70, 860)
     this.add.existing(this.candleman)
 
     // Collisions
@@ -93,11 +95,12 @@ export default class MainScene extends Phaser.Scene {
     this.physics.add.collider(this.candleman, this.waxLayer)
     this.physics.add.collider(this.candleman, this.doorsLayer)
     this.physics.add.collider(this.candleman, this.treesLayer)
+    // this.physics.add.collider(this.ghosts, this.treesLayer)
 
     // Camera
     this.mainCamera = this.cameras.main
     this.mainCamera.startFollow(this.candleman)
-    // camera.setZoom(1.5)
+    this.mainCamera.setZoom(2)
     this.mainCamera.setFollowOffset(0, 0)
     this.mainCamera.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
 
@@ -112,6 +115,18 @@ export default class MainScene extends Phaser.Scene {
     this.createFood(200, 200)
     this.createFood(300, 300)
     this.createFood(400, 400)
+
+    this.initialGhost()
+    this.createGhost(300, 300)
+  }
+
+  private initialGhost() {
+    this.ghosts = this.physics.add.group()
+    for (let i = 0; i < 3; i++) {
+      const x = Phaser.Math.Between(0, this.physics.world.bounds.width)
+      const y = Phaser.Math.Between(0, this.physics.world.bounds.height)
+      this.createGhost(x, y)
+    }
   }
 
   update() {
@@ -127,15 +142,23 @@ export default class MainScene extends Phaser.Scene {
       alert('Candleman light up')
     }
 
-    // // log the Collision element
-    // if (this.waxLayer === null) {
-    //   throw new Error('waxLayer is null')
-    // }
-    // this.physics.overlap(
-    //   this.candleman,
-    //   this.foodGroup,
-    //   this.handleFoodCollision
-    // )
+    this.ghosts.children.iterate((ghost: Phaser.GameObjects.GameObject) => {
+      const sprite = ghost as Phaser.Physics.Arcade.Sprite
+      this.physics.moveToObject(sprite, this.candleman, 60)
+      return null
+    })
+
+    // Check for collisions between candleman and ghosts
+    this.physics.overlap(this.candleman, this.ghosts, (candleman, ghost) => {
+      // Reduce wax and destroy ghost
+      this.uiScene.wax -= 30
+      this.uiScene.updateWaxBar()
+      ghost.destroy()
+      // Create new ghost at a random position
+      const x = Phaser.Math.Between(0, this.physics.world.bounds.width)
+      const y = Phaser.Math.Between(0, this.physics.world.bounds.height)
+      this.createGhost(x, y)
+    })
   }
 
   private createFood(x: number, y: number) {
@@ -149,35 +172,35 @@ export default class MainScene extends Phaser.Scene {
 
     this.physics.add.collider(this.candleman, food, () => {
       console.log('Candleman eats food!')
-      this.uiScene.wax += 100
+      this.uiScene.wax += 30
+      this.uiScene.updateWaxBar()
       food.destroy()
     })
 
     return food
   }
 
-  createGhost(position: Phaser.Math.Vector2) {
-    const ghost = this.physics.add.sprite(position.x, position.y, 'ghost')
+  createGhost(x: number, y: number): Phaser.Physics.Arcade.Sprite {
+    const ghost = this.ghosts.create(
+      x,
+      y,
+      'ghost',
+    ) as Phaser.Physics.Arcade.Sprite
+    ghost.setOrigin(0, 0)
     ghost.setCollideWorldBounds(true)
     ghost.setBounce(1, 1)
     ghost.setImmovable(true)
     ghost.setInteractive()
 
-    // Set up collision between the ghost and the world layers
-    // this.physics.add.collider(ghost, this.groundLayer)
-    // this.physics.add.collider(ghost, this.waxLayer)
-    // this.physics.add.collider(ghost, this.doorsLayer)
-    // this.physics.add.collider(ghost, this.treesLayer)
-
     // Set up movement towards the candleman
-    this.physics.moveToObject(ghost, this.candleman, 100)
+    this.physics.moveToObject(ghost, this.candleman, 60)
 
     // Return the ghost object
     return ghost
   }
 
-  handleFoodCollision() // food: Phaser.Physics.Arcade.Sprite, // candleman: Candleman,
-  {
+  handleFoodCollision() {
+    // food: Phaser.Physics.Arcade.Sprite, // candleman: Candleman,
     // 让食物消失
     // food.destroy()
     // 让 Candleman 吃掉食物

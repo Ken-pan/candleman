@@ -1,7 +1,8 @@
+
 export default class UIScene extends Phaser.Scene {
   wax = 100
   waxIsRunning = true
-  waxRate = 1000 // 1 second
+  waxRate = 4 // 1=1s 0.5=2s 2=0.5s
 
   waxBar!: Phaser.GameObjects.Graphics
   waxBarBackground!: Phaser.GameObjects.Graphics
@@ -22,10 +23,16 @@ export default class UIScene extends Phaser.Scene {
     this.createTimers()
   }
 
+  setWaxRate(rate: number) {
+    this.waxRate = rate
+  }
+
   private createTimers() {
+    var looptime = 1000 / this.waxRate
+
     // Wax timer
     this.time.addEvent({
-      delay: this.waxRate,
+      delay: looptime,
       loop: true,
       callback: this.updateWaxBar,
       callbackScope: this,
@@ -75,6 +82,11 @@ export default class UIScene extends Phaser.Scene {
 
   update() {}
 
+  resetWax() {
+    this.wax = 100
+    this.updateWaxBar()
+  }
+
   private updateWaxBar() {
     if (this.waxIsRunning === false) {
       return
@@ -89,8 +101,7 @@ export default class UIScene extends Phaser.Scene {
       this.scene.pause()
       this.scene.pause('MainScene')
 
-      // TODO: Add game over scene
-      // this.scene.start('GameOverScene')
+      this.scene.start('GameOverScene')
     } else {
       if (this.wax > 100) {
         this.wax = 100

@@ -12,6 +12,7 @@ export default class PreloaderScene extends Phaser.Scene {
   preload() {
     this.load.image('tileset', 'assets/tilemaps/tileset.png')
     this.load.tilemapTiledJSON('map', 'assets/tilemaps/map.json')
+    this.load.image('ghost', 'assets/img/ghost.png')
     this.load.spritesheet('candleman', 'assets/img/candleman.png', {
       frameWidth: 24,
       frameHeight: 36,
@@ -23,8 +24,7 @@ export default class PreloaderScene extends Phaser.Scene {
   }
 
   create() {
-    this.scene.start('MainScene')
-    this.scene.start('UIScene')
+    this.scene.start('GameStartScene')
   }
 
   update() {}

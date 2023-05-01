@@ -1,11 +1,21 @@
 export default class Candleman extends Phaser.Physics.Arcade.Sprite {
-  health: number = 100
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, 'candleman')
     scene.add.existing(this)
     scene.physics.add.existing(this)
     this.setCollideWorldBounds(true)
     this.makeAnimations()
+    // 检查物理体是否存在
+    if (this.body) {
+      this.body.setSize(16, 16) // 设置碰撞体积
+      this.setVelocity(0)
+      if (this.scene.input.keyboard === null) {
+        throw new Error('Trees Layer is null.')
+      }
+      this.body.setSize(this.width / 2, this.height / 2)
+      this.body.setOffset(this.width / 4, this.height / 2)
+    }
+
     // this.update()
 
     this.anims.play('candleman-idle', true)
@@ -61,6 +71,7 @@ export default class Candleman extends Phaser.Physics.Arcade.Sprite {
   }
   preUpdate(t: number, dt: number) {
     super.preUpdate(t, dt)
+    const uiScene = this.scene.scene.get('UIScene')
 
     this.setVelocity(0)
     if (this.scene.input.keyboard === null) {
@@ -68,25 +79,26 @@ export default class Candleman extends Phaser.Physics.Arcade.Sprite {
     }
 
     if (this.scene.input.keyboard.addKey('left').isDown) {
-      this.setVelocityX(-80)
+      this.setVelocityX(-120)
       this.anims.play('candleman-left', true)
 
       console.log('turn left')
     } else if (this.scene.input.keyboard.addKey('right').isDown) {
-      this.setVelocityX(80)
+      this.setVelocityX(120)
       this.anims.play('candleman-right', true)
       console.log('turn right')
     } else if (this.scene.input.keyboard.addKey('up').isDown) {
-      this.setVelocityY(-80)
+      this.setVelocityY(-120)
       this.anims.play('candleman-up', true)
       console.log('turn up')
     } else if (this.scene.input.keyboard.addKey('down').isDown) {
-      this.setVelocityY(80)
+      this.setVelocityY(120)
       this.anims.play('candleman-down', true)
       console.log('turn down')
     } else {
       this.anims.play('candleman-idle', true)
     }
 
+    // make the this.waxRate in UIScene = 8
   }
 }
