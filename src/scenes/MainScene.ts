@@ -1,4 +1,5 @@
 import Candleman from '../objects/Candleman'
+import GameWinScene from './GameWinScene'
 
 export default class MainScene extends Phaser.Scene {
   plateforms!: Phaser.Physics.Arcade.StaticGroup
@@ -172,7 +173,7 @@ export default class MainScene extends Phaser.Scene {
     })
 
     // Check for collisions between candleman and ghosts
-    this.physics.overlap(this.candleman, this.ghosts, (ghost) => {
+    this.physics.overlap(this.candleman, this.ghosts, (candleman, ghost) => {
       // Reduce wax and destroy ghost
       this.uiScene.wax -= 30
       this.uiScene.updateWaxBar()
