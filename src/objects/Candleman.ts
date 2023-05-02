@@ -71,8 +71,6 @@ export default class Candleman extends Phaser.Physics.Arcade.Sprite {
   }
   preUpdate(t: number, dt: number) {
     super.preUpdate(t, dt)
-    const uiScene = this.scene.scene.get('UIScene')
-
     this.setVelocity(0)
     if (this.scene.input.keyboard === null) {
       throw new Error('Trees Layer is null.')
@@ -81,20 +79,15 @@ export default class Candleman extends Phaser.Physics.Arcade.Sprite {
     if (this.scene.input.keyboard.addKey('left').isDown) {
       this.setVelocityX(-120)
       this.anims.play('candleman-left', true)
-
-      console.log('turn left')
     } else if (this.scene.input.keyboard.addKey('right').isDown) {
       this.setVelocityX(120)
       this.anims.play('candleman-right', true)
-      console.log('turn right')
     } else if (this.scene.input.keyboard.addKey('up').isDown) {
       this.setVelocityY(-120)
       this.anims.play('candleman-up', true)
-      console.log('turn up')
     } else if (this.scene.input.keyboard.addKey('down').isDown) {
       this.setVelocityY(120)
       this.anims.play('candleman-down', true)
-      console.log('turn down')
     } else {
       this.anims.play('candleman-idle', true)
     }

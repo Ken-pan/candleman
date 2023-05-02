@@ -4,6 +4,7 @@ import GameStartScene from './scenes/GameStartScene'
 import MainScene from './scenes/MainScene'
 import UIScene from './scenes/UIScene'
 import GameOverScene from './scenes/GameOverScene'
+import GameWinScene from './scenes/GameWinScene'
 
 
 const config: Phaser.Types.Core.GameConfig = {
@@ -21,7 +22,14 @@ const config: Phaser.Types.Core.GameConfig = {
       // debug: true,
     },
   },
-  scene: [PreloaderScene, GameStartScene, MainScene, UIScene, GameOverScene],
+  scene: [
+    PreloaderScene,
+    GameStartScene,
+    MainScene,
+    UIScene,
+    GameOverScene,
+    GameWinScene,
+  ],
   roundPixels: true, // <-- 设置roundPixels为true
 }
 

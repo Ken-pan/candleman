@@ -8,7 +8,8 @@ export default class UIScene extends Phaser.Scene {
   waxBarBackground!: Phaser.GameObjects.Graphics
   scoreUI!: Phaser.GameObjects.Text
   uiContainer!: Phaser.GameObjects.Container
-  mainScene!: any
+  timerText!: Phaser.GameObjects.Text
+  timer!: Phaser.Time.TimerEvent
 
   constructor() {
     super({ key: 'UIScene' })
@@ -21,6 +22,24 @@ export default class UIScene extends Phaser.Scene {
     this.createWaxBar()
     this.createScoreUI()
     this.createTimers()
+    this.timerText = this.add.text(
+      this.cameras.main.width - 100,
+      10,
+      'Time: 0s',
+      { fontSize: '16px', color: '#fff' },
+    )
+    this.uiContainer.add(this.timerText)
+    this.timer = this.time.addEvent({
+      delay: 1000,
+      callback: this.updateTimer,
+      callbackScope: this,
+      loop: true,
+    })
+  }
+  updateTimer() {
+    const elapsedSeconds = Math.floor(this.time.now / 1000)
+    localStorage.setItem('timeAlive', elapsedSeconds.toString())
+    this.timerText.setText(`Time: ${elapsedSeconds}s`)
   }
 
   setWaxRate(rate: number) {
@@ -98,9 +117,8 @@ export default class UIScene extends Phaser.Scene {
       this.waxIsRunning = false
 
       // Game over
-      this.scene.pause()
-      this.scene.pause('MainScene')
-
+      this.scene.stop()
+      this.scene.stop('MainScene')
       this.scene.start('GameOverScene')
     } else {
       if (this.wax > 100) {

@@ -6,8 +6,9 @@ export default class GameStartScene extends Phaser.Scene {
 
   preload() {
     // 加载背景图片和按钮图像
-    this.load.image('background', 'assets/img/startBG.png')
+    this.load.image('background', 'assets/img/cover.png')
     this.load.image('startButton', 'assets/img/startButton.png')
+    
   }
 
   create() {
@@ -25,14 +26,12 @@ export default class GameStartScene extends Phaser.Scene {
     startButton.setInteractive({ useHandCursor: true })
     startButton.on('pointerdown', () => {
       // 当按钮被按下时，切换到游戏场景
-      this.scene.pause('StartScene')
-      //remove the button
-      startButton.destroy()
-
       const mainScene = this.scene.get('MainScene')
       const uiScene = this.scene.get('UIScene')
+
       mainScene.scene.restart()
       uiScene.scene.restart()
+      this.scene.stop()
     })
   }
 }
