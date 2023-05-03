@@ -27,19 +27,19 @@ export default class PreloaderScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     })
-    this.load.audio('stepdirt_1', ['/assets/audio/stepdirt_1.wav'])
-    this.load.audio('stepdirt_2', ['/assets/audio/stepdirt_2.wav'])
-    this.load.audio('stepdirt_3', ['/assets/audio/stepdirt_3.wav'])
-    this.load.audio('stepdirt_4', ['/assets/audio/stepdirt_4.wav'])
-    this.load.audio('stepdirt_5', ['/assets/audio/stepdirt_5.wav'])
-    this.load.audio('stepdirt_6', ['/assets/audio/stepdirt_6.wav'])
-    this.load.audio('stepdirt_7', ['/assets/audio/stepdirt_7.wav'])
-    this.load.audio('stepdirt_8', ['/assets/audio/stepdirt_8.wav'])
-    this.load.audio('backgroundMusic', '/assets/audio/excit.wav')
-    this.load.audio('ghostSound', ['/assets/audio/ghost_2.flac'])
-    this.load.audio('eatSound', ['/assets/audio/crunch.6.ogg'])
-    this.load.audio('winSound', ['/assets/audio/win.wav'])
-    this.load.audio('loseSound', ['/assets/audio/lose.wav'])
+    this.load.audio('stepdirt_1', ['assets/audio/stepdirt_1.mp3'])
+    this.load.audio('stepdirt_2', ['assets/audio/stepdirt_2.mp3'])
+    this.load.audio('stepdirt_3', ['assets/audio/stepdirt_3.mp3'])
+    this.load.audio('stepdirt_4', ['assets/audio/stepdirt_4.mp3'])
+    this.load.audio('stepdirt_5', ['assets/audio/stepdirt_5.mp3'])
+    this.load.audio('stepdirt_6', ['assets/audio/stepdirt_6.mp3'])
+    this.load.audio('stepdirt_7', ['assets/audio/stepdirt_7.mp3'])
+    this.load.audio('stepdirt_8', ['assets/audio/stepdirt_8.mp3'])
+    this.load.audio('backgroundMusic', 'assets/audio/excit.mp3')
+    this.load.audio('ghostSound', ['assets/audio/ghost_2.mp3'])
+    this.load.audio('eatSound', ['assets/audio/crunch.6.mp3'])
+    this.load.audio('winSound', ['assets/audio/win.mp3'])
+    this.load.audio('loseSound', ['assets/audio/lose.mp3'])
   }
 
   create() {
