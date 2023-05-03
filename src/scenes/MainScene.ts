@@ -14,6 +14,10 @@ export default class MainScene extends Phaser.Scene {
     | Phaser.Sound.NoAudioSound
     | Phaser.Sound.HTML5AudioSound
     | Phaser.Sound.WebAudioSound
+  startBgm!:
+    | Phaser.Sound.NoAudioSound
+    | Phaser.Sound.HTML5AudioSound
+    | Phaser.Sound.WebAudioSound
 
   // Layers
   groundLayer!: Phaser.Tilemaps.TilemapLayer | null
@@ -26,10 +30,10 @@ export default class MainScene extends Phaser.Scene {
   foodGroup!: Phaser.Physics.Arcade.StaticGroup
   food!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
   map!: Phaser.Tilemaps.Tilemap
+  winSound!: Phaser.Sound.BaseSound
 
   constructor() {
     super({ key: 'MainScene' })
-    console.log("I'm inside my MainScene")
   }
 
   preload() {
@@ -37,6 +41,18 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
+    this.winSound = this.sound.add('winSound', {
+      loop: false,
+      volume: 1,
+    })
+    this.winSound.stop()
+    // 添加背景音乐
+    this.startBgm = this.sound.add('backgroundMusic', {
+      loop: true,
+      volume: 1,
+    })
+    this.startBgm.stop()
+    this.startBgm.play()
     this.ghostSound = this.sound.add('ghostSound', {
       loop: false,
       volume: 1,
@@ -134,7 +150,7 @@ export default class MainScene extends Phaser.Scene {
       this.map.heightInPixels,
     )
 
-    this.createDoor(50, 600)
+    this.createDoor(650, 80)
     this.createSpotlight()
 
     this.foodGroup = this.physics.add.staticGroup()
@@ -142,7 +158,6 @@ export default class MainScene extends Phaser.Scene {
       { id: 75, key: 'food' },
     ])
     this.foodGroup.addMultiple(foodObjects as Phaser.GameObjects.GameObject[])
-
 
     // create 8 food at random position
     this.mapCreateFood()
@@ -189,8 +204,8 @@ export default class MainScene extends Phaser.Scene {
         this.candleman.x,
         this.candleman.y,
       )
-      if (distance <= 160) {
-        this.physics.moveToObject(sprite, this.candleman, 100)
+      if (distance <= 120) {
+        this.physics.moveToObject(sprite, this.candleman, 80)
         // play ghostSound
         this.ghostSound.play()
       } else {
@@ -226,7 +241,6 @@ export default class MainScene extends Phaser.Scene {
     food.setInteractive()
 
     this.physics.add.collider(this.candleman, food, () => {
-      console.log('Candleman eats food!')
       this.eatSound.play()
       this.uiScene.wax += 30
       this.uiScene.updateWaxBar()
@@ -246,7 +260,8 @@ export default class MainScene extends Phaser.Scene {
     door.setInteractive()
 
     this.physics.add.collider(this.candleman, door, () => {
-      console.log('Candleman wins!')
+      this.startBgm.stop()
+      this.winSound.play()
       this.scene.stop()
       this.scene.stop('UIScene')
       this.scene.start('GameWinScene')
@@ -274,17 +289,6 @@ export default class MainScene extends Phaser.Scene {
     return ghost
   }
 
-  handleFoodCollision() {
-    // food: Phaser.Physics.Arcade.Sprite, // candleman: Candleman,
-    // 让食物消失
-    // food.destroy()
-    // 让 Candleman 吃掉食物
-    // this.candleman.eatFood()
-    console.log('Candleman eats food!')
-  }
-  // eatFood() {
-
-  // }
 
   createSpotlight() {
     // Create the darkmask if it doesn't exist

@@ -6,10 +6,12 @@ export default class PreloaderScene extends Phaser.Scene {
 
   constructor() {
     super({ key: 'PreloaderScene' })
-    console.log("I'm inside my PreloaderScene")
   }
 
   preload() {
+    this.load.image('background', 'assets/img/cover.png')
+    this.load.image('startButton', 'assets/img/startButton.png')
+    this.load.image('title', 'assets/img/title.png')
     this.load.image('tileset', 'assets/tilemaps/tileset.png')
     this.load.tilemapTiledJSON('map', 'assets/tilemaps/map.json')
     this.load.image('ghost', 'assets/img/ghost.png')
@@ -33,8 +35,11 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.audio('stepdirt_6', ['/assets/audio/stepdirt_6.wav'])
     this.load.audio('stepdirt_7', ['/assets/audio/stepdirt_7.wav'])
     this.load.audio('stepdirt_8', ['/assets/audio/stepdirt_8.wav'])
+    this.load.audio('backgroundMusic', '/assets/audio/excit.wav')
     this.load.audio('ghostSound', ['/assets/audio/ghost_2.flac'])
     this.load.audio('eatSound', ['/assets/audio/crunch.6.ogg'])
+    this.load.audio('winSound', ['/assets/audio/win.wav'])
+    this.load.audio('loseSound', ['/assets/audio/lose.wav'])
   }
 
   create() {

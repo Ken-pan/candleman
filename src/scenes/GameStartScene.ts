@@ -2,30 +2,37 @@ export default class GameStartScene extends Phaser.Scene {
 
   constructor() {
     super({ key: 'GameStartScene' })
-    console.log("I'm inside my StartScene")
   }
 
   preload() {
-    // 加载背景图片和按钮图像
-    this.load.image('background', 'assets/img/cover.png')
-    this.load.image('startButton', 'assets/img/startButton.png')
-    this.load.image('title', 'assets/img/title.png')
-    this.load.audio('backgroundMusic', '/assets/audio/excit.wav')
   }
 
   create() {
-    // 添加背景图片
+    // Add background
     const background = this.add.image(0, 0, 'background')
     background.setOrigin(0, 0)
     background.displayWidth = this.sys.canvas.width
     background.displayHeight = this.sys.canvas.height
-    
 
-    // 添加标题
+    // Add title
     const title = this.add.image(0, 200, 'title')
     title.setOrigin(0, 0)
     title.displayWidth = 400
     title.displayHeight = 80
+
+    // Add class text
+    const classText = this.add.text(
+      10,
+      this.sys.canvas.height - 30,
+      'IDX 528 - Prototyping Interactions | Spring 23 | Ken Pan',
+      {
+        fontSize: '14px',
+        fontFamily: 'Arial',
+        color: '#ffffff',
+      },
+    )
+    classText.setOrigin(0, 0)
+
 
     // 添加开始按钮
     const startButton = this.add.sprite(100, 600, 'startButton')
@@ -37,13 +44,7 @@ export default class GameStartScene extends Phaser.Scene {
       // 当按钮被按下时，切换到游戏场景
       const mainScene = this.scene.get('MainScene')
       const uiScene = this.scene.get('UIScene')
-      // 添加背景音乐
-      const startBgm = this.sound.add('backgroundMusic', {
-        loop: true,
-        volume: 1,
-      })
-      startBgm.stop()
-      startBgm.play()
+
       mainScene.scene.restart()
       uiScene.scene.restart()
       this.scene.stop()

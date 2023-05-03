@@ -10,13 +10,15 @@ export default class UIScene extends Phaser.Scene {
   uiContainer!: Phaser.GameObjects.Container
   timerText!: Phaser.GameObjects.Text
   timer!: Phaser.Time.TimerEvent
+  loseSound: any
 
   constructor() {
     super({ key: 'UIScene' })
-    console.log("I'm inside my UIScene")
   }
 
   create() {
+    this.loseSound = this.sound.add('loseSound')
+
     this.createContainer()
     this.createWaxBarBackground()
     this.createWaxBar()
@@ -71,7 +73,7 @@ export default class UIScene extends Phaser.Scene {
   private createWaxBar() {
     this.waxBar = this.add.graphics()
     this.waxBar.fillStyle(0xff0000, 1)
-    this.waxBar.fillRect(10, 10, 300, 20)
+    this.waxBar.fillRect(10, 10, 260, 20)
     this.waxBar.setScrollFactor(0)
     this.waxBar.setDepth(100)
     this.uiContainer.add(this.waxBar)
@@ -81,7 +83,7 @@ export default class UIScene extends Phaser.Scene {
   private createWaxBarBackground() {
     this.waxBarBackground = this.add.graphics()
     this.waxBarBackground.fillStyle(0x000000, 0.5)
-    this.waxBarBackground.fillRect(10, 10, 300, 20)
+    this.waxBarBackground.fillRect(10, 10, 260, 20)
     this.waxBarBackground.setScrollFactor(0)
     this.waxBarBackground.setDepth(99)
     this.uiContainer.add(this.waxBarBackground)
@@ -119,6 +121,7 @@ export default class UIScene extends Phaser.Scene {
       // Game over
       this.scene.stop()
       this.scene.stop('MainScene')
+      this.loseSound.play()
       this.scene.start('GameOverScene')
     } else {
       if (this.wax > 100) {
@@ -126,7 +129,7 @@ export default class UIScene extends Phaser.Scene {
       }
       this.waxBar.clear()
       this.waxBar.fillStyle(0xff0000, 1)
-      this.waxBar.fillRect(10, 10, this.wax * 3, 20)
+      this.waxBar.fillRect(10, 10, this.wax * 260/100, 20)
       this.scoreUI.setText(`WAX: ${Math.floor(this.wax)}`)
     }
   }
