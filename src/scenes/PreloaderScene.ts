@@ -25,6 +25,16 @@ export default class PreloaderScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     })
+    this.load.audio('stepdirt_1', ['/assets/audio/stepdirt_1.wav'])
+    this.load.audio('stepdirt_2', ['/assets/audio/stepdirt_2.wav'])
+    this.load.audio('stepdirt_3', ['/assets/audio/stepdirt_3.wav'])
+    this.load.audio('stepdirt_4', ['/assets/audio/stepdirt_4.wav'])
+    this.load.audio('stepdirt_5', ['/assets/audio/stepdirt_5.wav'])
+    this.load.audio('stepdirt_6', ['/assets/audio/stepdirt_6.wav'])
+    this.load.audio('stepdirt_7', ['/assets/audio/stepdirt_7.wav'])
+    this.load.audio('stepdirt_8', ['/assets/audio/stepdirt_8.wav'])
+    this.load.audio('ghostSound', ['/assets/audio/ghost_2.flac'])
+    this.load.audio('eatSound', ['/assets/audio/crunch.6.ogg'])
   }
 
   create() {

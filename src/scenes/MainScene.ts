@@ -1,5 +1,4 @@
 import Candleman from '../objects/Candleman'
-import GameWinScene from './GameWinScene'
 
 export default class MainScene extends Phaser.Scene {
   plateforms!: Phaser.Physics.Arcade.StaticGroup
@@ -10,6 +9,11 @@ export default class MainScene extends Phaser.Scene {
   mainCamera!: Phaser.Cameras.Scene2D.Camera
   mask!: Phaser.GameObjects.Graphics
   uiScene!: any
+  ghostSound!: Phaser.Sound.BaseSound
+  eatSound!:
+    | Phaser.Sound.NoAudioSound
+    | Phaser.Sound.HTML5AudioSound
+    | Phaser.Sound.WebAudioSound
 
   // Layers
   groundLayer!: Phaser.Tilemaps.TilemapLayer | null
@@ -28,12 +32,26 @@ export default class MainScene extends Phaser.Scene {
     console.log("I'm inside my MainScene")
   }
 
-  preload() {}
+  preload() {
+    this.load.audio('backgroundMusic', '/assets/audio/excit.wav')
+  }
 
   create() {
+    this.ghostSound = this.sound.add('ghostSound', {
+      loop: false,
+      volume: 1,
+    })
+    this.eatSound = this.sound.add('eatSound', {
+      loop: false,
+      volume: 1,
+    })
     this.map = this.make.tilemap({ key: 'map' })
     this.uiScene = this.scene.get('UIScene')
-
+    const gameBgm = this.sound.add('backgroundMusic', {
+      loop: true,
+      volume: 0.5,
+    })
+    gameBgm.play()
     const tileset = this.map.addTilesetImage('tileset', 'tileset', 32, 32, 0, 0)
 
     if (tileset === null) {
@@ -124,14 +142,21 @@ export default class MainScene extends Phaser.Scene {
       { id: 75, key: 'food' },
     ])
     this.foodGroup.addMultiple(foodObjects as Phaser.GameObjects.GameObject[])
-    // log the foodGroup
-    // console.log(this.foodGroup)
 
-    this.createFood(200, 200)
-    this.createFood(300, 300)
-    this.createFood(400, 400)
 
+    // create 8 food at random position
+    this.mapCreateFood()
+
+    // create 5 ghost at random position
     this.initialGhost()
+  }
+
+  private mapCreateFood() {
+    for (let i = 0; i < 8; i++) {
+      const x = Phaser.Math.Between(0, this.physics.world.bounds.width)
+      const y = Phaser.Math.Between(0, this.physics.world.bounds.height)
+      this.createFood(x, y)
+    }
   }
 
   private initialGhost() {
@@ -166,6 +191,8 @@ export default class MainScene extends Phaser.Scene {
       )
       if (distance <= 160) {
         this.physics.moveToObject(sprite, this.candleman, 100)
+        // play ghostSound
+        this.ghostSound.play()
       } else {
         this.physics.moveToObject(sprite, this.candleman, 0)
       }
@@ -200,6 +227,7 @@ export default class MainScene extends Phaser.Scene {
 
     this.physics.add.collider(this.candleman, food, () => {
       console.log('Candleman eats food!')
+      this.eatSound.play()
       this.uiScene.wax += 30
       this.uiScene.updateWaxBar()
       food.destroy()
