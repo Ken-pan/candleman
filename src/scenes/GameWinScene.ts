@@ -1,14 +1,22 @@
-import MainScene from "./MainScene"
-import UIScene from "./UIScene"
+import MainScene from './MainScene'
+import UIScene from './UIScene'
 
 export default class GameWinScene extends Phaser.Scene {
+  winSound!: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound
   constructor() {
     super({ key: 'GameWinScene' })
+
   }
 
   create() {
-     this.scene.remove('MainScene')
-     this.scene.remove('UIScene')
+    this.scene.remove('MainScene')
+    this.scene.remove('UIScene')
+    this.sound.stopAll()
+    this.winSound = this.sound.add('winSound', {
+      loop: false,
+      volume: 1,
+    })
+    this.winSound.play()
 
     // Add background image
     const background = this.add.image(0, 0, 'winbg').setOrigin(0)
@@ -33,8 +41,7 @@ export default class GameWinScene extends Phaser.Scene {
     )
     timeAliveText.setOrigin(0.5)
 
-
-     // Add restart button
+    // Add restart button
     const restartButton = this.add.image(
       this.cameras.main.centerX,
       this.cameras.main.centerY + 240,
@@ -48,7 +55,7 @@ export default class GameWinScene extends Phaser.Scene {
       this.scene.stop('GameWinScene')
       this.scene.add('MainScene', MainScene, true)
       this.scene.add('UIScene', UIScene, true)
+      this.scene.get('UIScene').timer.elapsed = 0
     })
-
   }
 }

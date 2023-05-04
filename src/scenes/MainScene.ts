@@ -30,7 +30,7 @@ export default class MainScene extends Phaser.Scene {
   foodGroup!: Phaser.Physics.Arcade.StaticGroup
   food!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
   map!: Phaser.Tilemaps.Tilemap
-  winSound!: Phaser.Sound.BaseSound
+
   filterRect!: Phaser.GameObjects.Graphics
 
   constructor() {
@@ -42,11 +42,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    this.winSound = this.sound.add('winSound', {
-      loop: false,
-      volume: 1,
-    })
-    this.winSound.stop()
+    
     // 添加背景音乐
     this.startBgm = this.sound.add('backgroundMusic', {
       loop: true,
@@ -286,7 +282,7 @@ export default class MainScene extends Phaser.Scene {
 
     this.physics.add.collider(this.candleman, door, () => {
       this.startBgm.stop()
-      this.winSound.play()
+
       this.scene.get('UIScene').waxIsRunning = false
       this.scene.stop('UIScene')
       this.scene.stop('MainScene')

@@ -1,5 +1,5 @@
-import MainScene from "./MainScene"
-import UIScene from "./UIScene"
+import MainScene from './MainScene'
+import UIScene from './UIScene'
 
 export default class GameOverScene extends Phaser.Scene {
   loseSound!:
@@ -13,6 +13,7 @@ export default class GameOverScene extends Phaser.Scene {
   create() {
     this.scene.remove('MainScene')
     this.scene.remove('UIScene')
+    this.sound.stopAll()
 
     this.loseSound = this.sound.add('loseSound')
     this.loseSound.play()
@@ -54,6 +55,7 @@ export default class GameOverScene extends Phaser.Scene {
       this.scene.stop('GameOverScene')
       this.scene.add('MainScene', MainScene, true)
       this.scene.add('UIScene', UIScene, true)
+      this.scene.get('UIScene').timer.elapsed = 0
     })
   }
 }
