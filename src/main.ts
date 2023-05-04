@@ -13,6 +13,8 @@ const config: Phaser.Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     width: 400,
     height: 800,
+    parent: 'phaser-game', // 添加 parent 属性
+    autoCenter: Phaser.Scale.CENTER_BOTH, // 游戏画面居中
   },
 
   physics: {

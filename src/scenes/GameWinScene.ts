@@ -9,9 +9,12 @@ export default class GameWinScene extends Phaser.Scene {
   }
 
   create() {
+    // Remove other scenes
     this.scene.remove('MainScene')
     this.scene.remove('UIScene')
     this.sound.stopAll()
+    
+    // Add win sound
     this.winSound = this.sound.add('winSound', {
       loop: false,
       volume: 1,
@@ -52,6 +55,7 @@ export default class GameWinScene extends Phaser.Scene {
     restartButton.displayHeight = 75
     restartButton.setInteractive()
     restartButton.on('pointerdown', () => {
+      // Restart game
       this.scene.stop('GameWinScene')
       this.scene.add('MainScene', MainScene, true)
       this.scene.add('UIScene', UIScene, true)

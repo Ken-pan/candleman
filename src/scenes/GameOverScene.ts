@@ -11,10 +11,12 @@ export default class GameOverScene extends Phaser.Scene {
   }
 
   create() {
+    // Remove other scenes
     this.scene.remove('MainScene')
     this.scene.remove('UIScene')
     this.sound.stopAll()
 
+    // Add lose sound
     this.loseSound = this.sound.add('loseSound')
     this.loseSound.play()
 
@@ -52,6 +54,7 @@ export default class GameOverScene extends Phaser.Scene {
     restartButton.displayHeight = 75
     restartButton.setInteractive()
     restartButton.on('pointerdown', () => {
+      // Restart game
       this.scene.stop('GameOverScene')
       this.scene.add('MainScene', MainScene, true)
       this.scene.add('UIScene', UIScene, true)

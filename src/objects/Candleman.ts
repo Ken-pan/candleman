@@ -1,7 +1,10 @@
 export default class Candleman extends Phaser.Physics.Arcade.Sprite {
   stepSounds: Phaser.Sound.BaseSound[] = []
-  lastPlayedTime: number = 0 // 记录上一次播放音效的时间
-  minTimeBetweenSteps: number = 200 // 最短的播放间隔时间（单位：毫秒）
+  lastPlayedTime: number = 0
+  minTimeBetweenSteps: number = 200
+  invincible: boolean = false // if true, candleman can't be eaten by ghosts
+  invincibleTimer: number = 0 // timer for invincibility
+
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, 'candleman')
     scene.add.existing(this)
@@ -9,9 +12,34 @@ export default class Candleman extends Phaser.Physics.Arcade.Sprite {
     this.setCollideWorldBounds(true)
     this.makeAnimations()
 
-    // 检查物理体是否存在
+    // check if the body is null
+    this.initialCandleman(scene)
+  }
+
+  preUpdate(t: number, dt: number) {
+    super.preUpdate(t, dt)
+
+    this.checkInvincible(dt)
+
+    if (this.scene.input.keyboard === null) {
+      throw new Error('Keyboard is null.')
+    }
+    if (this.scene.input.keyboard.addKey('left').isDown) {
+      this.moveLeft()
+    } else if (this.scene.input.keyboard.addKey('right').isDown) {
+      this.moveRight()
+    } else if (this.scene.input.keyboard.addKey('up').isDown) {
+      this.moveUp()
+    } else if (this.scene.input.keyboard.addKey('down').isDown) {
+      this.moveDown()
+    } else {
+      this.idle()
+    }
+  }
+
+  private initialCandleman(scene: Phaser.Scene) {
     if (this.body) {
-      this.body.setSize(16, 16) // 设置碰撞体积
+      this.body.setSize(16, 16) // set the collision box size
       this.setVelocity(0)
       if (this.scene.input.keyboard === null) {
         throw new Error('Trees Layer is null.')
@@ -31,7 +59,26 @@ export default class Candleman extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  private makeAnimations() {
+  ghostCollide() {
+    this.invincible = true
+    this.invincibleTimer = 1000 // Keep invincible for 1 second
+  }
+
+  private checkInvincible(dt: number) {
+    if (this.invincible) {
+      let alpha = 1 - this.invincibleTimer / 1000 // calculate alpha for red, 1 is opaque
+      let redTint = Phaser.Display.Color.GetColor(255, 255 * alpha, 255 * alpha)
+      this.setTint(redTint) // set the tint to red
+      this.invincibleTimer -= dt
+
+      if (this.invincibleTimer <= 0) {
+        this.invincible = false
+        this.clearTint()
+      }
+    }
+  }
+
+  makeAnimations() {
     this.anims.create({
       key: 'candleman-idle',
       frames: this.anims.generateFrameNames('candleman', {
@@ -79,47 +126,45 @@ export default class Candleman extends Phaser.Physics.Arcade.Sprite {
       repeat: -1,
     })
   }
-  preUpdate(t: number, dt: number) {
-    super.preUpdate(t, dt)
-    this.setVelocity(0)
-    if (this.scene.input.keyboard === null) {
-      throw new Error('Trees Layer is null.')
-    }
 
-    if (this.scene.input.keyboard.addKey('left').isDown) {
-      this.setVelocityX(-120)
-      this.anims.play('candleman-left', true)
-      this.playStepSound()
-    } else if (this.scene.input.keyboard.addKey('right').isDown) {
-      this.setVelocityX(120)
-      this.anims.play('candleman-right', true)
-      this.playStepSound()
-    } else if (this.scene.input.keyboard.addKey('up').isDown) {
-      this.setVelocityY(-120)
-      this.anims.play('candleman-up', true)
-      this.playStepSound()
-    } else if (this.scene.input.keyboard.addKey('down').isDown) {
-      this.setVelocityY(120)
-      this.anims.play('candleman-down', true)
-      this.playStepSound()
-    } else {
-      this.anims.play('candleman-idle', true)
-    }
-
-    // make the this.waxRate in UIScene = 8
-  }
-
-  private playStepSound() {
+  playStepSound() {
     const soundIndex = Phaser.Math.Between(0, 7)
     const sound = this.stepSounds[soundIndex]
-    const currentTime = this.scene.time.now // 获取当前时间
-
-
+    const currentTime = this.scene.time.now // access the current time
 
     if (currentTime - this.lastPlayedTime > this.minTimeBetweenSteps) {
       // 让音量变小一点，并播放sound
-      sound.play({ volume: 0.2 })
+      sound.play({ volume: 0.1 })
       this.lastPlayedTime = currentTime
     }
+  }
+
+  moveUp() {
+    this.setVelocityY(-120)
+    this.anims.play('candleman-up', true)
+    this.playStepSound()
+  }
+
+  moveDown() {
+    this.setVelocityY(120)
+    this.anims.play('candleman-down', true)
+    this.playStepSound()
+  }
+
+  moveLeft() {
+    this.setVelocityX(-120)
+    this.anims.play('candleman-left', true)
+    this.playStepSound()
+  }
+
+  moveRight() {
+    this.setVelocityX(120)
+    this.anims.play('candleman-right', true)
+    this.playStepSound()
+  }
+
+  idle() {
+    this.setVelocity(0)
+    this.anims.play('candleman-idle', true)
   }
 }
