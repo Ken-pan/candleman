@@ -1,8 +1,8 @@
-
+import GameOverScene from './GameOverScene'
 export default class UIScene extends Phaser.Scene {
   wax = 100
   waxIsRunning = true
-  waxRate = 4 // 1=1s 0.5=2s 2=0.5s
+  waxRate = 4 // 1=1s 0.5=2s 2=0.5s 4=0.25s
 
   waxBar!: Phaser.GameObjects.Graphics
   waxBarBackground!: Phaser.GameObjects.Graphics
@@ -10,15 +10,13 @@ export default class UIScene extends Phaser.Scene {
   uiContainer!: Phaser.GameObjects.Container
   timerText!: Phaser.GameObjects.Text
   timer!: Phaser.Time.TimerEvent
-  loseSound: any
+  gameOverScene!: GameOverScene
 
   constructor() {
     super({ key: 'UIScene' })
   }
 
   create() {
-    this.loseSound = this.sound.add('loseSound')
-
     this.createContainer()
     this.createWaxBarBackground()
     this.createWaxBar()
@@ -31,12 +29,17 @@ export default class UIScene extends Phaser.Scene {
       { fontSize: '16px', color: '#fff' },
     )
     this.uiContainer.add(this.timerText)
+
+    if (this.timer !== undefined) {
+      this.timer.elapsed = 0
+    }
     this.timer = this.time.addEvent({
       delay: 1000,
       callback: this.updateTimer,
       callbackScope: this,
       loop: true,
     })
+    this.gameOverScene = this.scene.get('GameOverScene') as GameOverScene
   }
   updateTimer() {
     const elapsedSeconds = Math.floor(this.time.now / 1000)
@@ -64,9 +67,6 @@ export default class UIScene extends Phaser.Scene {
   private createContainer() {
     this.uiContainer = this.add.container(0, 0)
     this.uiContainer.setScrollFactor(1)
-
-    // Position the container
-    // this.uiContainer.setPosition(0, 0)
   }
 
   // Wax bar
@@ -101,11 +101,24 @@ export default class UIScene extends Phaser.Scene {
     this.uiContainer.add(this.scoreUI)
   }
 
-  update() {}
+  update() {
+    this.waxBar.clear()
+    this.waxBar.fillStyle(0xff0000, 1)
+    this.waxBar.fillRect(10, 10, (this.wax * 260) / 100, 20)
+    this.scoreUI.setText(`WAX: ${Math.floor(this.wax)}`)
+  }
 
-  resetWax() {
+  reset() {
     this.wax = 100
-    this.updateWaxBar()
+    this.waxIsRunning = true
+    this.waxBar.clear()
+    this.waxIsRunning = true
+    this.timer.remove()
+    if (localStorage.getItem('timeAlive') !== null) {
+      this.timerText.setText(`Time: ${localStorage.getItem('timeAlive')}s`)
+    } else {
+      this.timerText.setText('Time: 0s')
+    }
   }
 
   private updateWaxBar() {
@@ -117,20 +130,18 @@ export default class UIScene extends Phaser.Scene {
 
     if (this.wax < 0) {
       this.waxIsRunning = false
-
       // Game over
-      this.scene.stop()
+      console.log('Game over1')
+      this.scene.stop('UIScene')
+      console.log('Game over2')
       this.scene.stop('MainScene')
-      this.loseSound.play()
-      this.scene.start('GameOverScene')
+      console.log('Game over3')
+      this.scene.get('GameOverScene').scene.start()
+      console.log('Game over4')
     } else {
       if (this.wax > 100) {
         this.wax = 100
       }
-      this.waxBar.clear()
-      this.waxBar.fillStyle(0xff0000, 1)
-      this.waxBar.fillRect(10, 10, this.wax * 260/100, 20)
-      this.scoreUI.setText(`WAX: ${Math.floor(this.wax)}`)
     }
   }
 }

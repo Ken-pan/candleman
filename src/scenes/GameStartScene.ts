@@ -44,7 +44,6 @@ export default class GameStartScene extends Phaser.Scene {
       // 当按钮被按下时，切换到游戏场景
       const mainScene = this.scene.get('MainScene')
       const uiScene = this.scene.get('UIScene')
-
       mainScene.scene.restart()
       uiScene.scene.restart()
       this.scene.stop()

@@ -187,15 +187,6 @@ export default class MainScene extends Phaser.Scene {
     this.light.x = this.candleman.x
     this.light.y = this.candleman.y
 
-    // throw an error if this.input.keyboard is null
-    if (this.input.keyboard === null) {
-      throw new Error('keyboard is null')
-    }
-    //if user click the space, the candleman will light up
-    if (this.input.keyboard.addKey('SPACE').isDown) {
-      alert('Candleman light up')
-    }
-
     this.ghosts.children.iterate((ghost: Phaser.GameObjects.GameObject) => {
       const sprite = ghost as Phaser.Physics.Arcade.Sprite
       const distance = Phaser.Math.Distance.Between(
@@ -217,8 +208,8 @@ export default class MainScene extends Phaser.Scene {
     // Check for collisions between candleman and ghosts
     this.physics.overlap(this.candleman, this.ghosts, (candleman, ghost) => {
       // Reduce wax and destroy ghost
-      this.uiScene.wax -= 30
-      this.uiScene.updateWaxBar()
+      this.scene.get('UIScene').wax -= 30
+      this.scene.get('UIScene').updateWaxBar()
       ghost.destroy()
       // Create new ghost at a random position
       const x = Phaser.Math.Between(0, this.physics.world.bounds.width)
@@ -289,7 +280,6 @@ export default class MainScene extends Phaser.Scene {
     return ghost
   }
 
-
   createSpotlight() {
     // Create the darkmask if it doesn't exist
     if (!this.darkmask) {
@@ -337,5 +327,11 @@ export default class MainScene extends Phaser.Scene {
     maskGraphics.setAlpha(0.2)
     maskGraphics.setBlendMode(Phaser.BlendModes.MULTIPLY)
     this.mask = maskGraphics
+  }
+
+  killAllRunning() {
+    // Stop all sounds
+    this.sound.stopAll()
+    this.candleman.setPosition(70, 860)
   }
 }

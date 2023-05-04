@@ -1,10 +1,24 @@
+import MainScene from "./MainScene"
+import UIScene from "./UIScene"
+
 export default class GameOverScene extends Phaser.Scene {
+  loseSound!:
+    | Phaser.Sound.NoAudioSound
+    | Phaser.Sound.HTML5AudioSound
+    | Phaser.Sound.WebAudioSound
   constructor() {
     super({ key: 'GameOverScene' })
     console.log("I'm inside my GameOverScene")
   }
 
   create() {
+
+    this.scene.remove('MainScene')
+    this.scene.remove('UIScene')
+
+    this.loseSound = this.sound.add('loseSound')
+    this.loseSound.play()
+
     // Add background image
     const background = this.add.image(0, 0, 'losebg').setOrigin(0)
     background.displayWidth = this.cameras.main.width
@@ -40,10 +54,8 @@ export default class GameOverScene extends Phaser.Scene {
     restartButton.setInteractive()
     restartButton.on('pointerdown', () => {
       this.scene.stop('GameOverScene')
-      const mainScene = this.scene.get('MainScene')
-      const uiScene = this.scene.get('UIScene')
-      mainScene.scene.restart()
-      uiScene.scene.restart()
+      this.scene.add('MainScene', MainScene, true)
+      this.scene.add('UIScene', UIScene, true)
     })
   }
 }

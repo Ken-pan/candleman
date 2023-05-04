@@ -1,3 +1,6 @@
+import MainScene from "./MainScene"
+import UIScene from "./UIScene"
+
 export default class GameWinScene extends Phaser.Scene {
   constructor() {
     super({ key: 'GameWinScene' })
@@ -5,6 +8,9 @@ export default class GameWinScene extends Phaser.Scene {
   }
 
   create() {
+     this.scene.remove('MainScene')
+     this.scene.remove('UIScene')
+
     // Add background image
     const background = this.add.image(0, 0, 'winbg').setOrigin(0)
     background.displayWidth = this.cameras.main.width
@@ -41,10 +47,8 @@ export default class GameWinScene extends Phaser.Scene {
     restartButton.setInteractive()
     restartButton.on('pointerdown', () => {
       this.scene.stop('GameWinScene')
-      const mainScene = this.scene.get('MainScene')
-      const uiScene = this.scene.get('UIScene')
-      mainScene.scene.restart()
-      uiScene.scene.restart()
+      this.scene.add('MainScene', MainScene, true)
+      this.scene.add('UIScene', UIScene, true)
     })
 
   }
