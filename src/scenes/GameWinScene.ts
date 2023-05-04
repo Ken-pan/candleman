@@ -13,7 +13,7 @@ export default class GameWinScene extends Phaser.Scene {
     this.scene.remove('MainScene')
     this.scene.remove('UIScene')
     this.sound.stopAll()
-    
+
     // Add win sound
     this.winSound = this.sound.add('winSound', {
       loop: false,
@@ -29,7 +29,8 @@ export default class GameWinScene extends Phaser.Scene {
     // Add game Win text
     const gameWinText = this.add.text(
       this.cameras.main.centerX,
-      this.cameras.main.centerY,
+      // in the top 1/3 of the screen
+      this.cameras.main.centerY - this.cameras.main.height / 3,
       'You Win!',
       { fontSize: '32px', color: '#fff' },
     )
@@ -38,7 +39,7 @@ export default class GameWinScene extends Phaser.Scene {
     // Add time alive text
     const timeAliveText = this.add.text(
       this.cameras.main.centerX,
-      this.cameras.main.centerY + 50,
+      this.cameras.main.centerY - this.cameras.main.height / 3 + 50,
       `You spend: ${localStorage.getItem('timeAlive')} seconds`,
       { fontSize: '24px', color: '#fff' },
     )

@@ -2,7 +2,7 @@ import GameOverScene from './GameOverScene'
 export default class UIScene extends Phaser.Scene {
   wax = 100
   waxIsRunning = true
-  waxRate = 3 // 1=1s 0.5=2s 2=0.5s 4=0.25s
+  waxRate = 6 // 1=1s 0.5=2s 2=0.5s 4=0.25s
 
   waxBar!: Phaser.GameObjects.Graphics
   waxBarBackground!: Phaser.GameObjects.Graphics

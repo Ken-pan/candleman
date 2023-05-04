@@ -140,25 +140,25 @@ export default class Candleman extends Phaser.Physics.Arcade.Sprite {
   }
 
   moveUp() {
-    this.setVelocityY(-120)
+    this.setVelocityY(-90)
     this.anims.play('candleman-up', true)
     this.playStepSound()
   }
 
   moveDown() {
-    this.setVelocityY(120)
+    this.setVelocityY(90)
     this.anims.play('candleman-down', true)
     this.playStepSound()
   }
 
   moveLeft() {
-    this.setVelocityX(-120)
+    this.setVelocityX(-90)
     this.anims.play('candleman-left', true)
     this.playStepSound()
   }
 
   moveRight() {
-    this.setVelocityX(120)
+    this.setVelocityX(90)
     this.anims.play('candleman-right', true)
     this.playStepSound()
   }

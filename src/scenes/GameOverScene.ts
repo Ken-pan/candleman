@@ -28,7 +28,7 @@ export default class GameOverScene extends Phaser.Scene {
     // Add game over text
     const gameOverText = this.add.text(
       this.cameras.main.centerX,
-      this.cameras.main.centerY,
+      this.cameras.main.centerY - this.cameras.main.height / 3,
       'Game Over',
       { fontSize: '32px', color: '#fff' },
     )
@@ -37,8 +37,8 @@ export default class GameOverScene extends Phaser.Scene {
     // Add time alive text
     const timeAliveText = this.add.text(
       this.cameras.main.centerX,
-      this.cameras.main.centerY + 50,
-      `Time Alive: ${localStorage.getItem('timeAlive')}`,
+      this.cameras.main.centerY - this.cameras.main.height / 3 + 50,
+      `Time Alive: ${localStorage.getItem('timeAlive')} seconds`,
       { fontSize: '24px', color: '#fff' },
     )
     timeAliveText.setOrigin(0.5)
