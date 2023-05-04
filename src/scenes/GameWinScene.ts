@@ -4,7 +4,6 @@ import UIScene from "./UIScene"
 export default class GameWinScene extends Phaser.Scene {
   constructor() {
     super({ key: 'GameWinScene' })
-    console.log("I'm inside my GameWinScene")
   }
 
   create() {

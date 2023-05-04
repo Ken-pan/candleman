@@ -8,11 +8,9 @@ export default class GameOverScene extends Phaser.Scene {
     | Phaser.Sound.WebAudioSound
   constructor() {
     super({ key: 'GameOverScene' })
-    console.log("I'm inside my GameOverScene")
   }
 
   create() {
-
     this.scene.remove('MainScene')
     this.scene.remove('UIScene')
 

@@ -40,6 +40,7 @@ export default class UIScene extends Phaser.Scene {
       loop: true,
     })
     this.gameOverScene = this.scene.get('GameOverScene') as GameOverScene
+ // 设置scrollFactor为0，确保它不会随着摄像机移动
   }
   updateTimer() {
     const elapsedSeconds = Math.floor(this.time.now / 1000)
@@ -128,16 +129,20 @@ export default class UIScene extends Phaser.Scene {
 
     this.wax -= 1
 
+    if (this.wax < 15) {
+      const alpha = (0.8 / 15) * (15 - this.wax)
+      this.scene.get('MainScene').filterRect.alpha = alpha
+
+      console.log(alpha)
+    }else{
+      this.scene.get('MainScene').filterRect.alpha = 0
+    }
+
     if (this.wax < 0) {
       this.waxIsRunning = false
-      // Game over
-      console.log('Game over1')
       this.scene.stop('UIScene')
-      console.log('Game over2')
       this.scene.stop('MainScene')
-      console.log('Game over3')
       this.scene.get('GameOverScene').scene.start()
-      console.log('Game over4')
     } else {
       if (this.wax > 100) {
         this.wax = 100

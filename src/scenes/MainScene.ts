@@ -31,6 +31,7 @@ export default class MainScene extends Phaser.Scene {
   food!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
   map!: Phaser.Tilemaps.Tilemap
   winSound!: Phaser.Sound.BaseSound
+  filterRect!: Phaser.GameObjects.Graphics
 
   constructor() {
     super({ key: 'MainScene' })
@@ -141,7 +142,7 @@ export default class MainScene extends Phaser.Scene {
     // Camera
     this.mainCamera = this.cameras.main
     this.mainCamera.startFollow(this.candleman)
-    this.mainCamera.setZoom(1.6)
+    this.mainCamera.setZoom(1.8)
     this.mainCamera.setFollowOffset(0, 0)
     this.mainCamera.setBounds(
       0,
@@ -164,6 +165,20 @@ export default class MainScene extends Phaser.Scene {
 
     // create 5 ghost at random position
     this.initialGhost()
+
+    // 创建一个在底部占整个画面大小的矩形
+    this.filterRect = this.add.graphics()
+    this.filterRect.fillRect(
+      0,
+      0,
+      this.cameras.main.width,
+      this.cameras.main.height,
+    )
+    this.filterRect.fillStyle(0x000000)
+    this.filterRect.setAlpha(0)
+    this.filterRect.setDepth(0)
+    this.filterRect.setBlendMode(Phaser.BlendModes.DARKEN)
+    this.filterRect.setScrollFactor(0)
   }
 
   private mapCreateFood() {
@@ -186,6 +201,18 @@ export default class MainScene extends Phaser.Scene {
   update() {
     this.light.x = this.candleman.x
     this.light.y = this.candleman.y
+    // 每1秒循环一下如下的代码
+    this.time.addEvent({
+      delay: 1000,
+      callback: () => {
+        this.light.setAlpha(1 + Math.random() * 0.1)
+        this.light.setScale(1 + Math.random() * 0.01)
+        this.light.x += Phaser.Math.Between(-0.1, 0.1)
+        this.light.y += Phaser.Math.Between(-0.1, 0.1)
+      },
+      loop: true,
+
+    })
 
     this.ghosts.children.iterate((ghost: Phaser.GameObjects.GameObject) => {
       const sprite = ghost as Phaser.Physics.Arcade.Sprite
@@ -195,12 +222,12 @@ export default class MainScene extends Phaser.Scene {
         this.candleman.x,
         this.candleman.y,
       )
-      if (distance <= 200 && distance > 120) {
-        sprite.alpha = 0.7 - ((distance - 120) / 80) * 0.6
+      if (distance <= 130 && distance > 80) {
+        sprite.alpha = 0.7 - ((distance - 80) / 50) * 0.7
         this.physics.moveToObject(sprite, this.candleman, 1)
-      } else if (distance <= 120) {
+      } else if (distance <= 80) {
         sprite.alpha = 1
-        this.physics.moveToObject(sprite, this.candleman, 55)
+        this.physics.moveToObject(sprite, this.candleman, 60)
         // play ghostSound
         this.ghostSound.play()
       } else {
@@ -238,9 +265,9 @@ export default class MainScene extends Phaser.Scene {
 
     this.physics.add.collider(this.candleman, food, () => {
       this.eatSound.play()
-      if (this.uiScene.wax) {
-        this.uiScene.wax += 10
-        this.uiScene.updateWaxBar()
+      if (this.scene.get('UIScene').wax) {
+        this.scene.get('UIScene').wax += 10
+        this.scene.get('UIScene').updateWaxBar()
       }
       food.destroy()
     })
@@ -260,8 +287,9 @@ export default class MainScene extends Phaser.Scene {
     this.physics.add.collider(this.candleman, door, () => {
       this.startBgm.stop()
       this.winSound.play()
-      this.scene.stop()
+      this.scene.get('UIScene').waxIsRunning = false
       this.scene.stop('UIScene')
+      this.scene.stop('MainScene')
       this.scene.start('GameWinScene')
     })
 
@@ -292,48 +320,34 @@ export default class MainScene extends Phaser.Scene {
     if (!this.darkmask) {
       this.darkmask = this.add.graphics()
       this.darkmask.fillStyle(0x000000, 1)
-      this.darkmask.setDepth(1)
-      this.darkmask.setAlpha(0.6)
-      this.darkmask.setBlendMode(Phaser.BlendModes.MULTIPLY)
+      this.darkmask.setDepth(3)
+      this.darkmask.setAlpha(0.5)
+      this.darkmask.setBlendMode(Phaser.BlendModes.DARKEN)
     }
 
     // Create the light if it doesn't exist
     if (!this.light) {
       this.light = this.add.graphics()
-      this.light.fillStyle(0xffffff, 1)
-      this.light.setDepth(2)
+      this.light.fillStyle(0xfed9ab, 0.2)
+      this.light.setDepth(999)
+      this.darkmask.setBlendMode(Phaser.BlendModes.LIGHTEN)
     }
 
     // Clear the darkmask and redraw it
-    this.darkmask.clear()
     this.darkmask.fillRect(
       0,
       0,
-      this.game.scale.width * 2,
+      this.game.scale.width * 3,
       this.game.scale.height * 2,
     )
 
-    // Add the light as a child of the scene and clear it
-    this.add.existing(this.light)
-    this.light.clear()
-
     // Draw the light and set its blend mode
-    this.light.fillCircle(0, 0, 120)
-    this.light.setBlendMode(Phaser.BlendModes.ADD)
+    this.light.fillCircle(0, 0, 55)
 
-    // Create a geometry mask using the darkmask and set it on the light
-    const mask = new Phaser.Display.Masks.GeometryMask(this, this.darkmask)
-    this.light.setMask(mask)
-
-    // Create a circular mask to show only the center of the light
-    const maskGraphics = this.add.graphics()
-    maskGraphics.fillStyle(0xffffff, 1)
-    maskGraphics.fillCircle(0, 0, 120)
-    maskGraphics.setScrollFactor(1)
-    maskGraphics.setDepth(1)
-    maskGraphics.setAlpha(0.2)
-    maskGraphics.setBlendMode(Phaser.BlendModes.MULTIPLY)
-    this.mask = maskGraphics
+    // Set the mask of the light to be the darkmask
+    this.light.setMask(
+      new Phaser.Display.Masks.GeometryMask(this, this.darkmask),
+    )
   }
 
   killAllRunning() {
