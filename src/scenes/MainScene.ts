@@ -176,7 +176,7 @@ export default class MainScene extends Phaser.Scene {
 
   private initialGhost() {
     this.ghosts = this.physics.add.group()
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 5; i++) {
       const x = Phaser.Math.Between(0, this.physics.world.bounds.width)
       const y = Phaser.Math.Between(0, this.physics.world.bounds.height)
       this.createGhost(x, y)
@@ -195,12 +195,17 @@ export default class MainScene extends Phaser.Scene {
         this.candleman.x,
         this.candleman.y,
       )
-      if (distance <= 120) {
-        this.physics.moveToObject(sprite, this.candleman, 80)
+      if (distance <= 200 && distance > 120) {
+        sprite.alpha = 0.7 - ((distance - 120) / 80) * 0.6
+        this.physics.moveToObject(sprite, this.candleman, 1)
+      } else if (distance <= 120) {
+        sprite.alpha = 1
+        this.physics.moveToObject(sprite, this.candleman, 40)
         // play ghostSound
         this.ghostSound.play()
       } else {
         this.physics.moveToObject(sprite, this.candleman, 0)
+        sprite.alpha = 0.05
       }
       return null
     })
@@ -233,8 +238,10 @@ export default class MainScene extends Phaser.Scene {
 
     this.physics.add.collider(this.candleman, food, () => {
       this.eatSound.play()
-      this.uiScene.wax += 30
-      this.uiScene.updateWaxBar()
+      if (this.uiScene.wax) {
+        this.uiScene.wax += 30
+        this.uiScene.updateWaxBar()
+      }
       food.destroy()
     })
 
