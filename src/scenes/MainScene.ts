@@ -141,7 +141,7 @@ export default class MainScene extends Phaser.Scene {
     // Camera
     this.mainCamera = this.cameras.main
     this.mainCamera.startFollow(this.candleman)
-    this.mainCamera.setZoom(2)
+    this.mainCamera.setZoom(1.6)
     this.mainCamera.setFollowOffset(0, 0)
     this.mainCamera.setBounds(
       0,
@@ -167,7 +167,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private mapCreateFood() {
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 20; i++) {
       const x = Phaser.Math.Between(0, this.physics.world.bounds.width)
       const y = Phaser.Math.Between(0, this.physics.world.bounds.height)
       this.createFood(x, y)
@@ -176,7 +176,7 @@ export default class MainScene extends Phaser.Scene {
 
   private initialGhost() {
     this.ghosts = this.physics.add.group()
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 8; i++) {
       const x = Phaser.Math.Between(0, this.physics.world.bounds.width)
       const y = Phaser.Math.Between(0, this.physics.world.bounds.height)
       this.createGhost(x, y)
@@ -200,7 +200,7 @@ export default class MainScene extends Phaser.Scene {
         this.physics.moveToObject(sprite, this.candleman, 1)
       } else if (distance <= 120) {
         sprite.alpha = 1
-        this.physics.moveToObject(sprite, this.candleman, 40)
+        this.physics.moveToObject(sprite, this.candleman, 55)
         // play ghostSound
         this.ghostSound.play()
       } else {
@@ -213,7 +213,7 @@ export default class MainScene extends Phaser.Scene {
     // Check for collisions between candleman and ghosts
     this.physics.overlap(this.candleman, this.ghosts, (candleman, ghost) => {
       // Reduce wax and destroy ghost
-      this.scene.get('UIScene').wax -= 30
+      this.scene.get('UIScene').wax -= 20
       this.scene.get('UIScene').updateWaxBar()
       ghost.destroy()
       // Create new ghost at a random position
@@ -239,7 +239,7 @@ export default class MainScene extends Phaser.Scene {
     this.physics.add.collider(this.candleman, food, () => {
       this.eatSound.play()
       if (this.uiScene.wax) {
-        this.uiScene.wax += 30
+        this.uiScene.wax += 10
         this.uiScene.updateWaxBar()
       }
       food.destroy()
