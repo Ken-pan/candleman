@@ -32,6 +32,7 @@ export default class MainScene extends Phaser.Scene {
   map!: Phaser.Tilemaps.Tilemap
 
   filterRect!: Phaser.GameObjects.Graphics
+  spotlightMask: Phaser.GameObjects.Sprite
 
   constructor() {
     super({ key: 'MainScene' })
@@ -42,7 +43,6 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    
     // 添加背景音乐
     this.startBgm = this.sound.add('backgroundMusic', {
       loop: true,
@@ -162,7 +162,7 @@ export default class MainScene extends Phaser.Scene {
     // create 5 ghost at random position
     this.initialGhost()
 
-    // 创建一个在底部占整个画面大小的矩形
+
     this.filterRect = this.add.graphics()
     this.filterRect.fillRect(
       0,
@@ -195,20 +195,20 @@ export default class MainScene extends Phaser.Scene {
   }
 
   update() {
-    this.light.x = this.candleman.x
-    this.light.y = this.candleman.y
-    // 每1秒循环一下如下的代码
-    this.time.addEvent({
-      delay: 1000,
-      callback: () => {
-        this.light.setAlpha(1 + Math.random() * 0.1)
-        this.light.setScale(1 + Math.random() * 0.01)
-        this.light.x += Phaser.Math.Between(-0.1, 0.1)
-        this.light.y += Phaser.Math.Between(-0.1, 0.1)
-      },
-      loop: true,
+    this.spotlightMask.x = this.candleman.x - this.cameras.main.scrollX
+    this.spotlightMask.y = this.candleman.y - this.cameras.main.scrollY
 
-    })
+    // // 每1秒循环一下如下的代码
+    // this.time.addEvent({
+    //   delay: 1000,
+    //   callback: () => {
+    //     this.light.setAlpha(1 + Math.random() * 0.1)
+    //     this.light.setScale(1 + Math.random() * 0.01)
+    //     this.light.x += Phaser.Math.Between(-0.1, 0.1)
+    //     this.light.y += Phaser.Math.Between(-0.1, 0.1)
+    //   },
+    //   loop: true,
+    // })
 
     this.ghosts.children.iterate((ghost: Phaser.GameObjects.GameObject) => {
       const sprite = ghost as Phaser.Physics.Arcade.Sprite
@@ -312,6 +312,17 @@ export default class MainScene extends Phaser.Scene {
   }
 
   createSpotlight() {
+    this.spotlightMask = this.add.sprite(0, 0, 'spotlight_mask')
+    this.spotlightMask.setBlendMode(Phaser.BlendModes.ERASE)
+    // Alpha 0.5 for a softer light
+    this.spotlightMask.setAlpha(0.7)
+    // higher depth so it's on top of everything else
+    this.spotlightMask.setDepth(999)
+    this.spotlightMask.setOrigin(0.5, 0.5)
+    this.spotlightMask.setScrollFactor(0)
+  }
+
+  createSpotlight2() {
     // Create the darkmask if it doesn't exist
     if (!this.darkmask) {
       this.darkmask = this.add.graphics()
@@ -340,10 +351,7 @@ export default class MainScene extends Phaser.Scene {
     // Draw the light and set its blend mode
     this.light.fillCircle(0, 0, 55)
 
-    // Set the mask of the light to be the darkmask
-    this.light.setMask(
-      new Phaser.Display.Masks.GeometryMask(this, this.darkmask),
-    )
+    this.darkmask.setMask(new Phaser.Display.Masks.BitmapMask(this, this.light))
   }
 
   killAllRunning() {
