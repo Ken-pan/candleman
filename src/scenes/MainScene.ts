@@ -4,10 +4,15 @@ export default class MainScene extends Phaser.Scene {
   plateforms!: Phaser.Physics.Arcade.StaticGroup
   player!: Phaser.Physics.Arcade.Sprite
   cursors!: Phaser.Types.Input.Keyboard.CursorKeys
-  ghosts!: Phaser.Physics.Arcade.Group
-  ghost!: Phaser.Physics.Arcade.Sprite
   mainCamera!: Phaser.Cameras.Scene2D.Camera
   mask!: Phaser.GameObjects.Graphics
+  // Layers & Map
+  groundLayer!: Phaser.Tilemaps.TilemapLayer | null
+  waxLayer!: Phaser.Tilemaps.TilemapLayer | null
+  doorsLayer!: Phaser.Tilemaps.TilemapLayer | null
+  treesLayer!: Phaser.Tilemaps.TilemapLayer | null
+  map!: Phaser.Tilemaps.Tilemap
+  // Sounds
   ghostSound!: Phaser.Sound.BaseSound
   eatSound!:
     | Phaser.Sound.NoAudioSound
@@ -17,18 +22,15 @@ export default class MainScene extends Phaser.Scene {
     | Phaser.Sound.NoAudioSound
     | Phaser.Sound.HTML5AudioSound
     | Phaser.Sound.WebAudioSound
-
-  // Layers
-  groundLayer!: Phaser.Tilemaps.TilemapLayer | null
-  waxLayer!: Phaser.Tilemaps.TilemapLayer | null
-  doorsLayer!: Phaser.Tilemaps.TilemapLayer | null
-  treesLayer!: Phaser.Tilemaps.TilemapLayer | null
+  // Candleman
   candleman!: Candleman
+  // Ghost
+  ghosts!: Phaser.Physics.Arcade.Group
+  ghost!: Phaser.Physics.Arcade.Sprite
+  // Foods
   foodGroup!: Phaser.Physics.Arcade.StaticGroup
   food!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
-  map!: Phaser.Tilemaps.Tilemap
-
-  filterRect!: Phaser.GameObjects.Graphics
+  // Spotlights
   spotlightMask!: Phaser.GameObjects.Sprite
 
   constructor() {
@@ -180,7 +182,7 @@ export default class MainScene extends Phaser.Scene {
 
     this.physics.add.collider(this.candleman, door, () => {
       // When user touch the dooer, play win scene
-      this.scene.get('UIScene').waxIsRunning = false
+      (this.scene.get('UIScene') as any).waxIsRunning = false
       this.scene.stop('UIScene')
       this.scene.stop('MainScene')
       this.scene.start('GameWinScene')

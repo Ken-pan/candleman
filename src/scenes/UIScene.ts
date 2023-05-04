@@ -26,8 +26,6 @@ export default class UIScene extends Phaser.Scene {
 
     this.createScoreUI()
 
-    this.createControlCircle()
-
     this.loopTimers()
 
     this.addSurviveTimer()
