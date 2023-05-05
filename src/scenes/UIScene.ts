@@ -170,7 +170,7 @@ export default class UIScene extends Phaser.Scene {
     this.uiContainer.add(this.controlCircle)
   }
 
-  private updateWaxBar() {
+  updateWaxBar() {
     if (this.waxIsRunning === false) {
       return
     }

@@ -1,4 +1,5 @@
 import Candleman from '../objects/Candleman'
+import UIScene from './UIScene'
 
 export default class MainScene extends Phaser.Scene {
   plateforms!: Phaser.Physics.Arcade.StaticGroup
@@ -32,6 +33,7 @@ export default class MainScene extends Phaser.Scene {
   food!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
   // Spotlights
   spotlightMask!: Phaser.GameObjects.Sprite
+  uiScene: any
 
   constructor() {
     super({ key: 'MainScene' })
@@ -42,6 +44,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
+    this.uiScene = this.scene.get('UIScene') as UIScene
     this.addMusic()
 
     this.addMap()
@@ -202,10 +205,12 @@ export default class MainScene extends Phaser.Scene {
 
     this.physics.add.collider(this.candleman, food, () => {
       this.eatSound.play()
-      if (this.scene.get('UIScene').wax) {
+
+
+      if (this.uiScene.wax) {
         // Increase user's wax when they touch the food
-        this.scene.get('UIScene').wax += 10
-        this.scene.get('UIScene').updateWaxBar()
+        this.uiScene.wax += 10
+        this.uiScene.updateWaxBar()
       }
       food.destroy()
     })
@@ -292,8 +297,8 @@ export default class MainScene extends Phaser.Scene {
     this.physics.overlap(this.candleman, this.ghosts, (candleman, ghost) => {
       // Reduce wax and destroy ghost
       if (!this.candleman.invincible) {
-        this.scene.get('UIScene').wax -= 20
-        this.scene.get('UIScene').updateWaxBar()
+        this.uiScene.wax -= 20
+        this.uiScene.updateWaxBar()
       }
       this.candleman.ghostCollide()
       ghost.destroy()
